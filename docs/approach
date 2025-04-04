@@ -1,0 +1,94 @@
+# SHL Assessment Recommendation System: Technical Approach
+
+## Overview
+We built an intelligent assessment recommendation system that uses semantic search and vector embeddings to match job descriptions with relevant SHL assessments. The system provides both a user-friendly web interface and a REST API endpoint.
+
+## Architecture
+
+### 1. Data Pipeline
+- **Data Source**: SHL product catalog (https://www.shl.com/solutions/products/product-catalog/)
+- **Data Processing**:
+  - Extracted assessment details including name, URL, test type, duration, and features
+  - Generated vector embeddings using GTE-Small model (384 dimensions)
+  - Stored in Supabase with pgvector extension for vector similarity search
+
+### 2. Search Implementation
+- **Embedding Generation**: 
+  - Using Supabase's AI Session with GTE-Small model
+  - Input text is embedded into 384-dimensional vectors
+  - Vectors are normalized for consistent similarity calculations
+- **Similarity Search**:
+  - PostgreSQL's pgvector extension for efficient vector similarity search
+  - Cosine similarity for matching query embeddings with assessment embeddings
+  - Match threshold of 0.8 to ensure high-quality recommendations
+  - Limited to top 10 most relevant results
+
+### 3. System Components
+
+#### Web Application
+- **Frontend**: React + TypeScript + Vite
+- **UI Framework**: Tailwind CSS for responsive design
+- **Icons**: Lucide React for consistent iconography
+- **State Management**: React hooks for local state
+- **API Integration**: Supabase client for secure API calls
+
+#### REST API
+- **Endpoint**: `GET /api?q={query}`
+- **Implementation**: Supabase Edge Functions (Deno runtime)
+- **Features**:
+  - Query parameter validation
+  - CORS support
+  - Error handling
+  - JSON response formatting
+- **Response Format**:
+```json
+{
+  "assessments": [
+    {
+      "name": "string",
+      "url": "string",
+      "remote_testing": boolean,
+      "adaptive_support": boolean,
+      "duration": "string",
+      "test_type": "string"
+    }
+  ]
+}
+```
+
+### 4. Key Features
+- Semantic search using vector embeddings
+- Real-time query processing
+- Mobile-responsive design
+- Error handling and loading states
+- Cross-browser compatibility
+- RESTful API access
+
+### 5. Performance Optimization
+- Vector indexing for fast similarity search
+- Client-side caching of results
+- Debounced search input
+- Optimized database queries
+- Lazy loading of components
+
+### 6. Security Measures
+- Row Level Security (RLS) policies
+- CORS configuration
+- Input sanitization
+- Rate limiting
+- Secure environment variables
+
+## Tools and Libraries
+- **Frontend**: React, TypeScript, Tailwind CSS, Lucide React
+- **Backend**: Supabase, PostgreSQL, pgvector
+- **AI/ML**: GTE-Small embedding model
+- **Development**: Vite, ESLint, PostCSS
+- **Deployment**: Supabase Edge Functions
+
+## Future Improvements
+1. Enhanced filtering capabilities
+2. User feedback integration
+3. Assessment recommendation explanations
+4. Performance analytics and monitoring
+5. A/B testing for matching algorithms
+6. Expanded assessment metadata
